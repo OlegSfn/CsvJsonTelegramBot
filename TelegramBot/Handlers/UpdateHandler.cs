@@ -229,6 +229,15 @@ public class UpdateHandler
     {
         _logger.LogInformation($"{message.From.Id} entered file choosing state.");
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
+        
+        if (!Keyboards.GetInstance().GetFileNamesKeyboard(userInfo, message.From.Id.ToString()).KeyboardToVariants()
+                .Contains(message.Text))
+        {
+            _logger.LogInformation($"{message.From.Id} [file choosing state] text is not from buttons.");
+            await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
+            return;
+        }
+        
         IFileProcessor fileProcessor;
         if (message.Text.EndsWith(".csv"))
             fileProcessor = new CSVProcessing();
@@ -240,9 +249,8 @@ public class UpdateHandler
             await botClient.SendTextMessageAsync(message.Chat.Id, "Название файла должно заканчиваться на \".csv\" или \".json\".");
             return;
         }
-
+            
         userInfo.CurFileNameDB = PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString());
-
         try
         {
             await using Stream stream = File.OpenRead(userInfo.CurFileNameDB);
@@ -252,16 +260,23 @@ public class UpdateHandler
             userInfo.UserState = UserState.EditingFile;
             _logger.LogInformation($"{message.From.Id} [file choosing state] successfully read data from file.");
         }
-        catch (FileNotFoundException)
+        catch (IOException)
         {
-            _logger.LogInformation($"{message.From.Id} [file choosing state] chosen file is not found.");
-            await botClient.SendTextMessageAsync(message.Chat.Id, "Выберите один из вариантов.");
+            _logger.LogInformation($"{message.From.Id} [file choosing state] cannot read file.");
+            await botClient.SendTextMessageAsync(message.Chat.Id, "Произошла ошибка при чтении из файла.");
         }
     }
     
     private async Task HandleFilteringFileState(ITelegramBotClient botClient, Message message)
     {
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
+        if (!Keyboards.GetInstance().GetFilterValueKeyboard(userInfo).KeyboardToVariants().Contains(message.Text))
+        {
+            _logger.LogInformation($"{message.From.Id} [filtered result] text is not from buttons.");
+            await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
+            return;
+        }
+        
         userInfo.CurIceHills = userInfo.CurIceHills.Where(x => x[userInfo.FieldToEdit] == message.Text).ToArray();
         await botClient.SendTextMessageAsync(message.Chat.Id,$"Найдено {userInfo.CurIceHills.Length} записей.\nВыберите следующий параметр или \"End\", чтобы закончить:", replyMarkup: Keyboards.GetInstance().FilterFieldKeyboard);
         _logger.LogInformation($"{message.From.Id} [filtered result] {userInfo.CurIceHills.Length} records.");
@@ -277,7 +292,11 @@ public class UpdateHandler
         else if (userInfo.FieldToEdit == "UsagePeriodWinter")
             sortedCollection = userInfo.CurIceHills.OrderBy(x => x.OpenDate);
         else
-            sortedCollection = userInfo.CurIceHills;
+        {
+            _logger.LogInformation($"{message.From.Id} [sorted result] text is not from buttons.");
+            await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
+            return;
+        }
         
         if (message.Text == "Ascending")
             userInfo.CurIceHills = sortedCollection.ToArray();
@@ -298,6 +317,14 @@ public class UpdateHandler
     private async Task HandleDownloadingFileState(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered downloading state.");
+        var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
+        if (!Keyboards.GetInstance().GetFileNamesKeyboard(userInfo, message.From.Id.ToString()).KeyboardToVariants().Contains(message.Text))
+        {
+            _logger.LogInformation($"{message.From.Id} [filtered result] text is not from buttons.");
+            await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
+            return;
+        }
+        
         var fileName = PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString());
         try
         {
@@ -321,6 +348,13 @@ public class UpdateHandler
     {
         _logger.LogInformation($"{message.From.Id} entered choosing filter state.");
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
+        if (!Keyboards.GetInstance().FilterFieldKeyboard.KeyboardToVariants().Contains(message.Text))
+        {
+            _logger.LogInformation($"{message.From.Id} [choosing filter state] text is not from buttons.");
+            await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
+            return;
+        }
+        
         if (message.Text == "End")
         {
             _logger.LogInformation($"{message.From.Id} [choosing filter state] entering saving results state.");
@@ -339,6 +373,13 @@ public class UpdateHandler
     {
         _logger.LogInformation($"{message.From.Id} entered choosing sort mode state.");
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
+        if (!Keyboards.GetInstance().SortFieldKeyboard.KeyboardToVariants().Contains(message.Text))
+        {
+            _logger.LogInformation($"{message.From.Id} [choosing filter state] text is not from buttons.");
+            await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
+            return;
+        }
+        
         if (message.Text == "End")
         {
             _logger.LogInformation($"{message.From.Id} [choosing sort mode state] entering saving results state.");

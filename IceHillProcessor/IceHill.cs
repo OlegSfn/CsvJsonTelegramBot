@@ -280,6 +280,7 @@ public class IceHill
             _ => throw new ArgumentException("There is no such field or this field isn't supported yet.")
         };
 
+    [Ignore]
     public DateTime OpenDate
     {
         get

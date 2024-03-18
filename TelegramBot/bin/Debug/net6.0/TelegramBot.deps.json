@@ -239,6 +239,9 @@
         }
       },
       "Extensions/1.0.0": {
+        "dependencies": {
+          "Telegram.Bot": "20.0.0-alpha.1"
+        },
         "runtime": {
           "Extensions.dll": {}
         }

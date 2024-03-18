@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using System.Xml.Schema;
+using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,7 @@ public class Program
         var logger = loggerFactory.CreateLogger<Program>();
         
         var botClient = new TelegramBotClient("1803799892:AAHr34l5WZnpJkovnE75C_kYMmDlrmOqMgc");
-        
+
         using CancellationTokenSource cts = new ();
         
         ReceiverOptions receiverOptions = new ()
