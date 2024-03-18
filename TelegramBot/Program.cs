@@ -7,8 +7,6 @@ using CustomLogger;
 using TelegramBot.Data;
 
 namespace TelegramBot;
-// /Users/oleg_sfn/Downloads/ice-hills.csv
-//TODO: If the data directory is not in place then DirectoryNotFound exc is released.
 public class Program
 {
     public static async Task Main()
