@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using CsvHelper.Configuration.Attributes;
 
 namespace IceHillProcessor;
@@ -33,7 +34,6 @@ public class IceHill
     private string _dimensionsWinter;
     private string _lighting;
     private string _surfaceTypeWinter;
-    private string _seats;
     private string _paid;
     private string _paidComments;
     private string _disabilityFriendly;
@@ -194,7 +194,17 @@ public class IceHill
     public string UsagePeriodWinter
     {
         get => _usagePeriodWinter;
-        set => _usagePeriodWinter = value ?? throw new ArgumentNullException(nameof(value));
+        set
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            var regex = new Regex(@"^\d{2}.\d{2}-\d{2}.\d{2}$");
+            if (regex.IsMatch(value))
+                _usagePeriodWinter = value;
+            else
+                throw new ArgumentException("Date is not in correct format.");
+        }
     }
 
     public string DimensionsWinter
@@ -215,11 +225,7 @@ public class IceHill
         set => _surfaceTypeWinter = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public string Seats
-    {
-        get => _seats;
-        set => _seats = value ?? throw new ArgumentNullException(nameof(value));
-    }
+    public int Seats { get; set; }
 
     public string Paid
     {

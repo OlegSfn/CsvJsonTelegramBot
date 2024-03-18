@@ -1,4 +1,5 @@
 using CsvHelper;
+using CsvHelper.TypeConversion;
 using Extensions;
 using IceHillProcessor;
 using Microsoft.Extensions.Logging;
@@ -44,7 +45,7 @@ public class UpdateHandler
                 switch (userState)
                 {
                     case UserState.None:
-                        await botClient.SendTextMessageAsync(update.Message.From.Id, "Нажми /start, чтобы начать!");
+                        await botClient.SendTextMessageAsync(update.Message.From.Id, "Нажми /start, чтобы начать!", cancellationToken: cancellationToken);
                         _logger.LogInformation($"{update.Message.From.Id} asked to press /start.");
                         break;
                     case UserState.Menu:
@@ -182,7 +183,7 @@ public class UpdateHandler
             fileProcessor.Read(stream); // Check for bad data.
             _logger.LogInformation($"{message.From.Id} [file upload state] file was saved successfully.");
         }
-        catch (Exception e) when (e is BadDataException or ArgumentException)
+        catch (Exception e) when (e is BadDataException or ArgumentException or ReaderException or TypeConverterException)
         {
             _logger.LogInformation($"{message.From.Id} [file upload state] sent file with wrong data.");
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл некорректный.");

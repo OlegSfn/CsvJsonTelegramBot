@@ -8,21 +8,11 @@ using TelegramBot.Data;
 
 namespace TelegramBot;
 // /Users/oleg_sfn/Downloads/ice-hills.csv
-//TODO: If the data directory is not in place then DirectoryNotFound exc is released. 
-//TODO: Check when int values are not int in file.
-//TODO: Check that data is correct.
-//TODO: Add more info to logging.
+//TODO: If the data directory is not in place then DirectoryNotFound exc is released.
 public class Program
 {
     public static async Task Main()
     {
-        #region TestCsv
-        // var csvProcessor = new CSVProcessing();
-        // IceHill[] iceHills = csvProcessor.Read(System.IO.File.OpenRead("/Users/oleg_sfn/Desktop/ice-hills-big.csv"));
-        // Console.WriteLine(iceHills);
-        // csvProcessor.Write(iceHills);
-        #endregion
-
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddSimpleConsole(options =>
