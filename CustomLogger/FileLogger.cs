@@ -6,7 +6,7 @@ namespace CustomLogger;
 public class FileLogger : ILogger
 {
     private readonly string _filePath;
-    private static readonly object S_Lock = new object();
+    private static readonly object S_Lock = new();
     public FileLogger(string path)
     {
         _filePath = path;

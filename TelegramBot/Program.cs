@@ -1,5 +1,4 @@
 ﻿using Telegram.Bot;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Microsoft.Extensions.Logging;
@@ -11,16 +10,18 @@ namespace TelegramBot;
 //TODO: If the data directory is not in place then DirectoryNotFound exc is released. 
 //TODO: Check when int values are not int in file.
 //TODO: Check that data is correct.
+//TODO: Add more info to logging.
 public class Program
 {
     public static async Task Main()
     {
         #region TestCsv
         // var csvProcessor = new CSVProcessing();
-        // IceHill[] iceHills = csvProcessor.Read(System.IO.File.OpenRead("/Users/oleg_sfn/Downloads/ice-hills.csv"));
+        // IceHill[] iceHills = csvProcessor.Read(System.IO.File.OpenRead("/Users/oleg_sfn/Desktop/ice-hills-big.csv"));
         // Console.WriteLine(iceHills);
+        // csvProcessor.Write(iceHills);
         #endregion
-        
+
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddSimpleConsole(options =>
@@ -32,8 +33,6 @@ public class Program
         });
         loggerFactory.AddFile(Path.Combine("../../../../", "var"));
         var logger = loggerFactory.CreateLogger<Program>();
-        BotStorage.GetInstance().Logger = logger;
-        
         
         var botClient = new TelegramBotClient("1803799892:AAHr34l5WZnpJkovnE75C_kYMmDlrmOqMgc");
         
@@ -44,29 +43,16 @@ public class Program
             AllowedUpdates = Array.Empty<UpdateType>() 
         };
         
-        var updateHandler = new Handlers.UpdateHandler();
+        var updateHandler = new Handlers.UpdateHandler(BotStorage.GetInstance(), logger);
         botClient.StartReceiving(
             updateHandler: updateHandler.HandleUpdateAsync,
-            pollingErrorHandler: HandlePollingErrorAsync,
+            pollingErrorHandler: updateHandler.HandlePollingErrorAsync,
             receiverOptions: receiverOptions,
             cancellationToken: cts.Token
         );
         
         Console.ReadLine(); // Needed to not end the program immediately.
         cts.Cancel();
-    }
-    
-    private static Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-    {
-        var ErrorMessage = exception switch
-        {
-            ApiRequestException apiRequestException
-                => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-            _ => exception.ToString()
-        };
-
-        Console.WriteLine(ErrorMessage);
-        return Task.CompletedTask;
     }
 }
 

@@ -1,10 +1,26 @@
 using System.Globalization;
+using System.Reflection.Metadata;
 using CsvHelper;
 using CsvHelper.Configuration;
 
 namespace IceHillProcessor;
 public class CSVProcessing : IFileProcessor
 {
+    private static readonly string[] s_headersRus =
+    {
+        "global_id", "Название спортивного объекта", "Название спортивной зоны в зимний период",
+        "Фотография в зимний период", "Административный округ", "Район", "Адрес", "Адрес электронной почты",
+        "Адрес сайта", "Справочный телефон", "Добавочный номер", "График работы в зимний период",
+        "Уточнение графика работы в зимний период", "Возможность проката оборудования",
+        "Комментарии для проката оборудования", "Наличие сервиса технического обслуживания",
+        "Комментарии для сервиса технического обслуживания", "Наличие раздевалки", "Наличие точки питания",
+        "Наличие туалета", "Наличие точки Wi-Fi", "Наличие банкомата", "Наличие медпункта",
+        "Наличие звукового сопровождения", "Период эксплуатации в зимний период", "Размеры в зимний период",
+        "Освещение", "Покрытие в зимний период", "Количество оборудованных посадочных мест",
+        "Форма посещения (платность)", "Комментарии к стоимости посещения", "Приспособленность для занятий инвалидов",
+        "Услуги предоставляемые в зимний период", "geoData", "geodata_center", "geoarea"
+    };
+    
     public Stream Write(IceHill[] iceHills)
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -17,6 +33,7 @@ public class CSVProcessing : IFileProcessor
         {
             csv.WriteHeader<IceHill>();
             csv.NextRecord();
+            writer.WriteLine(string.Join(',', s_headersRus.Select(x => $"\"{x}\"")));
             foreach (var record in iceHills)
             {
                 csv.WriteRecord(record);

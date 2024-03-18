@@ -7,7 +7,6 @@ public class BotStorage
 {
     private static BotStorage s_instance;
     public Dictionary<long, UserInfo> IdToUserInfoDict = new();
-    public ILogger Logger;
     
     public static BotStorage GetInstance()
     {
