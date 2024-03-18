@@ -16,6 +16,8 @@ namespace TelegramBot.Handlers;
 
 public class UpdateHandler
 {
+    private readonly Dictionary<UserState, Func<ITelegramBotClient, Message, Task>> _stateHandlers;
+    private readonly Dictionary<string, Func<ITelegramBotClient, Message, Task>> _commandsHandlers;
     private BotStorage _botStorage;
     private ILogger _logger;
 
@@ -23,78 +25,59 @@ public class UpdateHandler
     {
         _botStorage = botStorage;
         _logger = logger;
+
+        _stateHandlers = new Dictionary<UserState, Func<ITelegramBotClient, Message, Task>>
+        {
+            { UserState.None, HandleNoneState},
+            { UserState.Menu, HandleMenuState},
+            { UserState.EnteringNewFile, HandleEnteringNewFileState},
+            { UserState.EditingFile, HandleEditingFileState},
+            { UserState.ChoosingFile, HandleChoosingFileState},
+            { UserState.FilteringFile, HandleFilteringFileState},
+            { UserState.SortingFile, HandleSortingFileState},
+            { UserState.DownloadingFile, HandleDownloadingFileState},
+            { UserState.ChoosingFilter, HandleChoosingFilterState},
+            { UserState.ChoosingSortMode, HandleChoosingSortModeState},
+            { UserState.SavingResults, HandleSavingResultsState}
+        };
+        _commandsHandlers = new Dictionary<string, Func<ITelegramBotClient, Message, Task>>
+        {
+            {"/start", HandleStart}
+        };
     }
     
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        if (update.Message?.From == null)
+        if (update.Type != UpdateType.Message || update.Message?.From == null)
             return;
         
-        var userState = UserState.None;
-        var bot = _botStorage;
-        if (bot.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
-            userState = user.UserState;
         _logger.LogInformation($"{update.Message.From.Id} sent: {update.Message.Text ?? "(no text)"}.");
-        
-        if (update.Type == UpdateType.Message)
+
+        // Handle commands.
+        if (_commandsHandlers.TryGetValue(update.Message.Text ?? "", out var handler))
         {
-            if (update.Message.Text == "/start")
-                await HandleStart(botClient, update.Message);
-            else
-            {
-                switch (userState)
-                {
-                    case UserState.None:
-                        await botClient.SendTextMessageAsync(update.Message.From.Id, "Нажми /start, чтобы начать!", cancellationToken: cancellationToken);
-                        _logger.LogInformation($"{update.Message.From.Id} asked to press /start.");
-                        break;
-                    case UserState.Menu:
-                        await HandleMenuState(botClient, update.Message);
-                        break;
-                    case UserState.EnteringNewFile:
-                        await HandleEnteringNewFileState(botClient, update.Message);
-                        break;
-                    case UserState.EditingFile:
-                        await HandleEditingFileState(botClient, update.Message);
-                        break;
-                    case UserState.ChoosingFile:
-                        await HandleChoosingFileState(botClient, update.Message);
-                        break;
-                    case UserState.FilteringFile:
-                        await HandleFilteringFileState(botClient, update.Message);
-                        break;
-                    case UserState.SortingFile:
-                        await HandleSortingFileState(botClient, update.Message);
-                        break;
-                    case UserState.DownloadingFile:
-                        await HandleDownloadingFileState(botClient, update.Message);
-                        break;
-                    case UserState.ChoosingFilter:
-                        await HandleChoosingFilterState(botClient, update.Message);
-                        break;
-                    case UserState.ChoosingSortMode:
-                        await HandleChoosingSortModeState(botClient, update.Message);
-                        break;
-                    case UserState.SavingResults:
-                        await HandleSavingResultsState(botClient, update.Message);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            await handler(botClient, update.Message);
+            return;
         }
+        
+        // Handle messages.
+        var user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
+        if (_stateHandlers.TryGetValue(user.UserState, out handler))
+            await handler(botClient, update.Message);
+        else
+            _logger.LogInformation($"{update.Message.From.Id} unhandled state - {user.UserState}");
     }
 
     public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-        var ErrorMessage = exception switch
+        var errorMessage = exception switch
         {
             ApiRequestException apiRequestException
                 => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString()
         };
 
-        _logger.LogError(ErrorMessage);
+        _logger.LogError(errorMessage);
         return Task.CompletedTask;
     }
     
@@ -171,14 +154,7 @@ public class UpdateHandler
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         try
         {
-            IFileProcessor fileProcessor;
-            if (document.FileName.EndsWith(".csv"))
-                fileProcessor = new CSVProcessing();
-            else if (document.FileName.EndsWith(".json"))
-                fileProcessor = new JSONProcessing();
-            else
-                return;
-
+            var fileProcessor = new FileProcessorFactory(document.FileName).CreateFileProcessor();
             await using Stream stream = File.OpenRead(destinationFilePath);
             fileProcessor.Read(stream); // Check for bad data.
             _logger.LogInformation($"{message.From.Id} [file upload state] file was saved successfully.");
@@ -238,19 +214,15 @@ public class UpdateHandler
             await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
             return;
         }
-        
-        IFileProcessor fileProcessor;
-        if (message.Text.EndsWith(".csv"))
-            fileProcessor = new CSVProcessing();
-        else if (message.Text.EndsWith(".json"))
-            fileProcessor = new JSONProcessing();
-        else
+
+        if (!message.Text.EndsWith(".csv") && !message.Text.EndsWith(".json"))
         {
             _logger.LogInformation($"{message.From.Id} [file choosing state] wrong file extension.");
             await botClient.SendTextMessageAsync(message.Chat.Id, "Название файла должно заканчиваться на \".csv\" или \".json\".");
             return;
         }
-            
+
+        var fileProcessor = new FileProcessorFactory(message.Text).CreateFileProcessor();    
         userInfo.CurFileNameDB = PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString());
         try
         {
@@ -398,12 +370,7 @@ public class UpdateHandler
     private async Task HandleSavingResultsState(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered saving results state.");
-        IFileProcessor fileProcessor;
-        if (message.Text.EndsWith(".csv"))
-            fileProcessor = new CSVProcessing();
-        else if (message.Text.EndsWith(".json"))
-            fileProcessor = new JSONProcessing();
-        else
+        if (!message.Text.EndsWith(".csv") && !message.Text.EndsWith(".json"))
         {
             _logger.LogInformation($"{message.From.Id} [saving results state] bad file extension.");
             await botClient.SendTextMessageAsync(message.From.Id,
@@ -411,31 +378,30 @@ public class UpdateHandler
             return;
         }
 
+        var fileProcessor = new FileProcessorFactory(message.Text).CreateFileProcessor();
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         using var sr = new StreamReader(fileProcessor.Write(userInfo.CurIceHills));
         await File.WriteAllTextAsync(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()), await sr.ReadToEndAsync());
         _logger.LogInformation($"{message.From.Id} [saving results state] result was saved successfully.");
+        
         await botClient.SendTextMessageAsync(message.Chat.Id,"Результат сохранён!");
         userInfo.FileNames.Add(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()));
+        
         await EnterMainMenu(botClient, message);
     }
     
     private async Task HandleStart(ITelegramBotClient botClient, Message message)
     {
-        var botStorage = _botStorage;
-        if (botStorage.IdToUserInfoDict.ContainsKey(message.From.Id))
-        {
+        if (_botStorage.IdToUserInfoDict.ContainsKey(message.From.Id))
             _logger.LogInformation($"Found user {message.From.Id} in DB.");
-            await EnterMainMenu(botClient, message);
-        }
         else
         {
             _logger.LogInformation($"Registered new user {message.From.Id} in DB.");
             var newUserInfo = new UserInfo();
-            botStorage.IdToUserInfoDict.Add(message.From.Id, newUserInfo);
-            
-            await EnterMainMenu(botClient, message);
+            _botStorage.IdToUserInfoDict.Add(message.From.Id, newUserInfo);
         }
+        
+        await EnterMainMenu(botClient, message);
     }
 
     private async Task EnterMainMenu(ITelegramBotClient botClient, Message message)
@@ -444,5 +410,11 @@ public class UpdateHandler
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         await botClient.SendTextMessageAsync(message.Chat.Id, "Меню:", replyMarkup: Keyboards.GetInstance().GetMainMenuKeyboard(userInfo));
         userInfo.UserState = UserState.Menu;
+    }
+
+    private async Task HandleNoneState(ITelegramBotClient botClient, Message message)
+    {
+        await botClient.SendTextMessageAsync(message.From.Id, "Нажми /start, чтобы начать!");
+        _logger.LogInformation($"{message.From.Id} asked to press /start.");
     }
 }
