@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "+dYcSlHfIK8IFjJgtmcyo0kFYJBwyfC2b1GYzc8y8YdC7BieJD6G36sp91JuAxvPtHEsieQlpeTziw6Z6K2CTg==",
+  "success": true,
+  "projectFilePath": "/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/IceHillProcessor.csproj",
+  "expectedPackageFiles": [
+    "/Users/oleg_sfn/.nuget/packages/csvhelper/31.0.2/csvhelper.31.0.2.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

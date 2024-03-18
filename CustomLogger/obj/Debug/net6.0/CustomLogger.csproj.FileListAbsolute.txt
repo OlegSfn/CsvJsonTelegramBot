@@ -1,0 +1,12 @@
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/bin/Debug/net6.0/CustomLogger.deps.json
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/bin/Debug/net6.0/CustomLogger.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/bin/Debug/net6.0/CustomLogger.pdb
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.csproj.AssemblyReference.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.GeneratedMSBuildEditorConfig.editorconfig
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.AssemblyInfoInputs.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.AssemblyInfo.cs
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.csproj.CoreCompileInputs.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/refint/CustomLogger.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/CustomLogger.pdb
+/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/obj/Debug/net6.0/ref/CustomLogger.dll

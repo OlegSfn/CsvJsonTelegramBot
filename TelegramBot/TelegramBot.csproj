@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CsvHelper" Version="31.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="Telegram.Bot" Version="20.0.0-alpha.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CustomLogger\CustomLogger.csproj" />
+      <ProjectReference Include="..\Extensions\Extensions.csproj" />
+      <ProjectReference Include="..\IceHillProcessor\IceHillProcessor.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/bin/Debug/net6.0/IceHillProcessor.deps.json
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/bin/Debug/net6.0/IceHillProcessor.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/bin/Debug/net6.0/IceHillProcessor.pdb
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.csproj.AssemblyReference.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.GeneratedMSBuildEditorConfig.editorconfig
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.AssemblyInfoInputs.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.AssemblyInfo.cs
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.csproj.CoreCompileInputs.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/refint/IceHillProcessor.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/IceHillProcessor.pdb
+/Users/oleg_sfn/RiderProjects/TelegramBot/IceHillProcessor/obj/Debug/net6.0/ref/IceHillProcessor.dll

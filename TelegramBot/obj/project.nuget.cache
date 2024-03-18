@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "dgSpecHash": "LpbT18XPZgohSfOltJ+z8CESUicTMGjBaqhUF7X/h0d9ZBzSVKEQC9AWXGGF015sk6/uZwBZydXWHBOgyhrGRQ==",
+  "success": true,
+  "projectFilePath": "/Users/oleg_sfn/RiderProjects/TelegramBot/TelegramBot/TelegramBot.csproj",
+  "expectedPackageFiles": [
+    "/Users/oleg_sfn/.nuget/packages/csvhelper/31.0.2/csvhelper.31.0.2.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.configuration/8.0.0/microsoft.extensions.configuration.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.configuration.binder/8.0.0/microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.dependencyinjection/8.0.0/microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.logging/8.0.0/microsoft.extensions.logging.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.logging.configuration/8.0.0/microsoft.extensions.logging.configuration.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.logging.console/8.0.0/microsoft.extensions.logging.console.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.options/8.0.0/microsoft.extensions.options.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.options.configurationextensions/8.0.0/microsoft.extensions.options.configurationextensions.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/system.text.encodings.web/8.0.0/system.text.encodings.web.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/system.text.json/8.0.0/system.text.json.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/telegram.bot/20.0.0-alpha.1/telegram.bot.20.0.0-alpha.1.nupkg.sha512"
+  ],
+  "logs": []
+}

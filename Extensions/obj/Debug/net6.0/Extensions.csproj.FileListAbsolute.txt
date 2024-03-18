@@ -1,0 +1,12 @@
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/bin/Debug/net6.0/Extensions.deps.json
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/bin/Debug/net6.0/Extensions.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/bin/Debug/net6.0/Extensions.pdb
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.csproj.AssemblyReference.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.GeneratedMSBuildEditorConfig.editorconfig
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.AssemblyInfoInputs.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.AssemblyInfo.cs
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.csproj.CoreCompileInputs.cache
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/refint/Extensions.dll
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/Extensions.pdb
+/Users/oleg_sfn/RiderProjects/TelegramBot/Extensions/obj/Debug/net6.0/ref/Extensions.dll

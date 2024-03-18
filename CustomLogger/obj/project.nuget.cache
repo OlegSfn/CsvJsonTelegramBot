@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "OjmJQIFs4sb88cWtC1w3klx3GhlB424ZRV1dhjVGPWKIHGCJNF/d3wVEibQiXazD+R5VfRb+as85SQhaX3ou1A==",
+  "success": true,
+  "projectFilePath": "/Users/oleg_sfn/RiderProjects/TelegramBot/CustomLogger/CustomLogger.csproj",
+  "expectedPackageFiles": [
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/oleg_sfn/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
