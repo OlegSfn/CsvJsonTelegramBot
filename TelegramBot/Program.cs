@@ -1,5 +1,4 @@
-﻿using System.Xml.Schema;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Microsoft.Extensions.Logging;
@@ -9,7 +8,7 @@ using TelegramBot.Data;
 namespace TelegramBot;
 public class Program
 {
-    public static async Task Main()
+    public static Task Main()
     {
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
@@ -42,6 +41,7 @@ public class Program
         
         Console.ReadLine(); // Needed to not end the program immediately.
         cts.Cancel();
+        return Task.CompletedTask;
     }
 }
 
