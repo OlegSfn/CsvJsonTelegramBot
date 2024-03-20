@@ -6,7 +6,7 @@ namespace CustomLogger;
 public class FileLogger : ILogger
 {
     private readonly string _filePath;
-    private static readonly object S_Lock = new();
+    private static readonly object s_Lock = new();
     public FileLogger(string path)
     {
         _filePath = path;
@@ -26,7 +26,7 @@ public class FileLogger : ILogger
         if (formatter == null) return;
 
         var exc = "";
-        lock (S_Lock)
+        lock (s_Lock)
         {
             var fullFilePath = Path.Combine(_filePath, DateTime.Now.ToString("yyyy-MM-dd") + ".log");
             var n = Environment.NewLine;

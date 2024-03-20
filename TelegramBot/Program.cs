@@ -19,7 +19,7 @@ public class Program
                 options.TimestampFormat = "HH:mm:ss ";
             });
         });
-        loggerFactory.AddFile(Path.Combine("../../../../", "var"));
+        loggerFactory.AddFile("../../../../var");
         var logger = loggerFactory.CreateLogger<Program>();
         
         var botClient = new TelegramBotClient("1803799892:AAHr34l5WZnpJkovnE75C_kYMmDlrmOqMgc");

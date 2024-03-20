@@ -6,7 +6,7 @@ using Telegram.Bot.Types;
 using TelegramBot.Data;
 using TelegramBot.Data.User;
 
-namespace TelegramBot.Handlers;
+namespace TelegramBot.Handlers.FileEditing;
 
 public class ChoosingFileStateHandler : IAsyncHandler
 {
@@ -39,7 +39,7 @@ public class ChoosingFileStateHandler : IAsyncHandler
             return;
         }
 
-        var fileProcessor = new FileProcessorFactory(message.Text).CreateFileProcessor();    
+        var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), message.Text).CreateFileProcessor();    
         userInfo.CurFileNameDB = PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString());
         try
         {

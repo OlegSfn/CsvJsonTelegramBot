@@ -6,6 +6,8 @@ using CsvHelper.Configuration;
 namespace IceHillProcessor;
 public class CSVProcessing : IFileProcessor
 {
+    private readonly string _userTelegramId;
+    
     private static readonly string[] s_headersRus =
     {
         "global_id", "Название спортивного объекта", "Название спортивной зоны в зимний период",
@@ -20,6 +22,11 @@ public class CSVProcessing : IFileProcessor
         "Форма посещения (платность)", "Комментарии к стоимости посещения", "Приспособленность для занятий инвалидов",
         "Услуги предоставляемые в зимний период", "geoData", "geodata_center", "geoarea"
     };
+
+    public CSVProcessing(string userTelegramId)
+    {
+        _userTelegramId = userTelegramId;
+    }
     
     public Stream Write(IceHill[] iceHills)
     {
@@ -27,8 +34,9 @@ public class CSVProcessing : IFileProcessor
         {
             ShouldQuote = _ => true
         };
-        
-        using (var writer = new StreamWriter(Path.Combine("../../../../", "data", "temp.csv")))
+
+        var filePath = Path.Combine("../../../../data", "temps", $"temp{_userTelegramId}.csv");
+        using (var writer = new StreamWriter(filePath))
         using (var csv = new CsvWriter(writer, config))
         {
             csv.WriteHeader<IceHill>();
@@ -41,7 +49,7 @@ public class CSVProcessing : IFileProcessor
             }
         }
         
-        return File.OpenRead(Path.Combine("../../../../", "data", "temp.csv")); 
+        return File.OpenRead(filePath); 
     }
 
     public IceHill[] Read(Stream stream)
@@ -51,24 +59,23 @@ public class CSVProcessing : IFileProcessor
             DetectDelimiter = true,
             PrepareHeaderForMatch = arg => arg.Header.Trim('"')
         };
-        
-        using (var reader = new StreamReader(stream))
-        using (var csv = new CsvReader(reader, config))
-        {
-            csv.Read();
-            csv.ReadHeader();
 
-            #region validate second row
-            csv.Read();
-            var secondRow = csv.Parser.Record;
-            if (secondRow == null)
-                throw new ArgumentException("Bad data. There is no second header.");
-            if (secondRow.Length != csv.HeaderRecord.Length)
-                throw new ArgumentException("Bad data. Second header must have the same length as the first.");
-            #endregion
+        using var reader = new StreamReader(stream);
+        using var csv = new CsvReader(reader, config);
+        
+        csv.Read();
+        csv.ReadHeader();
+
+        #region validate second row
+        csv.Read();
+        var secondRow = csv.Parser.Record;
+        if (secondRow == null)
+            throw new ArgumentException("Bad data. There is no second header.");
+        if (secondRow.Length != csv.HeaderRecord.Length)
+            throw new ArgumentException("Bad data. Second header must have the same length as the first.");
+        #endregion
             
-            return csv.GetRecords<IceHill>().ToArray();
-        }
+        return csv.GetRecords<IceHill>().ToArray();
     }
     
     

@@ -5,6 +5,9 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Data;
 using TelegramBot.Data.User;
+using TelegramBot.Handlers.Commands;
+using TelegramBot.Handlers.FileEditing;
+using TelegramBot.Handlers.FileIO;
 
 namespace TelegramBot.Handlers;
 
@@ -37,7 +40,7 @@ public class UpdateHandler
         };
         _commandsHandlers = new Dictionary<string, IAsyncHandler>
         {
-            {"/start", new StartCommandHandler(botStorage, logger, mainMenu)}
+            { "/start", new StartCommandHandler(botStorage, logger, mainMenu)}
         };
     }
     
@@ -56,7 +59,12 @@ public class UpdateHandler
         }
         
         // Handle messages.
-        var user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
+        if (!_botStorage.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
+        {
+            await _commandsHandlers["/start"].HandleAsync(botClient, update.Message);
+            user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
+        }
+        
         if (_stateHandlers.TryGetValue(user.UserState, out handler))
             await handler.HandleAsync(botClient, update.Message);
         else

@@ -4,7 +4,7 @@ using Telegram.Bot.Types;
 using TelegramBot.Data;
 using TelegramBot.Data.User;
 
-namespace TelegramBot.Handlers;
+namespace TelegramBot.Handlers.FileEditing;
 
 public class EditingFileStateHandler : IAsyncHandler
 {

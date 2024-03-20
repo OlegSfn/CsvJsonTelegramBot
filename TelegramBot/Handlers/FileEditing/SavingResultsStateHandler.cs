@@ -1,4 +1,3 @@
-using System.Net;
 using Extensions;
 using IceHillProcessor;
 using Microsoft.Extensions.Logging;
@@ -6,7 +5,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Data;
 
-namespace TelegramBot.Handlers;
+namespace TelegramBot.Handlers.FileEditing;
 
 public class SavingResultsStateHandler : IAsyncHandler
 {
@@ -32,7 +31,7 @@ public class SavingResultsStateHandler : IAsyncHandler
             return;
         }
 
-        var fileProcessor = new FileProcessorFactory(message.Text).CreateFileProcessor();
+        var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),message.Text).CreateFileProcessor();
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         using var sr = new StreamReader(fileProcessor.Write(userInfo.CurIceHills));
         await System.IO.File.WriteAllTextAsync(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()), await sr.ReadToEndAsync());

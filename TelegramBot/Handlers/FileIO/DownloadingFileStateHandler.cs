@@ -4,7 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Data;
 
-namespace TelegramBot.Handlers;
+namespace TelegramBot.Handlers.FileIO;
 
 public class DownloadingFileStateHandler : IAsyncHandler
 {

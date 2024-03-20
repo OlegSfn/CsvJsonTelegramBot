@@ -8,7 +8,7 @@ using Telegram.Bot.Types;
 using TelegramBot.Data;
 using File = System.IO.File;
 
-namespace TelegramBot.Handlers;
+namespace TelegramBot.Handlers.FileIO;
 
 public class NewFileStateHandler : IAsyncHandler
 {
@@ -53,15 +53,16 @@ public class NewFileStateHandler : IAsyncHandler
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         try
         {
-            var fileProcessor = new FileProcessorFactory(document.FileName).CreateFileProcessor();
+            var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),document.FileName).CreateFileProcessor();
             await using Stream stream = File.OpenRead(destinationFilePath);
             fileProcessor.Read(stream); // Check for bad data.
+            await botClient.SendTextMessageAsync(message.Chat.Id, "Файл успешно добавлен.");
             _logger.LogInformation($"{message.From.Id} [file upload state] file was saved successfully.");
         }
         catch (Exception e) when (e is BadDataException or ArgumentException or ReaderException or TypeConverterException)
         {
-            _logger.LogInformation($"{message.From.Id} [file upload state] sent file with wrong data.");
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл некорректный.");
+            _logger.LogInformation($"{message.From.Id} [file upload state] sent file with wrong data.");
             File.Delete(destinationFilePath);
             return;
         }
