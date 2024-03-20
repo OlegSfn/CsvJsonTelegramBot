@@ -1,8 +1,9 @@
-using Extensions;
+using IceHillProcessor;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Data;
+using Extensions;
 
 namespace TelegramBot.Handlers.FileIO;
 
@@ -22,21 +23,22 @@ public class DownloadingFileStateHandler : IAsyncHandler
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered downloading state.");
-        var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
-        if (!Keyboards.GetInstance().GetFileNamesKeyboard(userInfo, message.From.Id.ToString()).KeyboardToVariants().Contains(message.Text))
+        if (!Keyboards.GetInstance().DownloadModeKeyboard.KeyboardToVariants().Contains(message.Text))
         {
-            _logger.LogInformation($"{message.From.Id} [filtered result] text is not from buttons.");
+            _logger.LogInformation($"{message.From.Id} [downloading state] text is not from buttons.");
             await botClient.SendTextMessageAsync(message.From.Id, "Выберите один из вариантов.");
             return;
         }
         
-        var fileName = PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString());
         try
         {
-            await using Stream stream = System.IO.File.OpenRead(fileName);
+            var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
+            var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), $".{message.Text.ToLower()}").CreateFileProcessor();
             await botClient.SendDocumentAsync(
                 chatId: message.Chat.Id,
-                document: InputFile.FromStream(stream: stream, fileName: message.Text),
+                document: InputFile.FromStream(
+                    stream: fileProcessor.Write(userInfo.CurIceHills), 
+                    fileName: Path.ChangeExtension(userInfo.CurFileNameDB.DBToUserFileName(message.From.Id.ToString()), Path.GetExtension(fileProcessor.FileName))),
                 caption: "Ваш файл:");
 
             _logger.LogInformation($"{message.From.Id} [downloading state] successfully sent file.");

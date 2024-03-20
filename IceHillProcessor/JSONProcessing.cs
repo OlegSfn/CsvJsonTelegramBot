@@ -14,7 +14,7 @@ public class JSONProcessing : IFileProcessor
     public Stream Write(IceHill[] iceHills)
     {
         var serializer = new JsonSerializer();
-        var filePath = Path.Combine("../../../../data", "temps", $"temp{_userTelegramId}.json");
+        var filePath = Path.Combine("../../../../data", "temps", FileName);
         using (var sw = new StreamWriter(filePath))
         using (var writer = new JsonTextWriter(sw))
         {
@@ -32,4 +32,6 @@ public class JSONProcessing : IFileProcessor
         var ser = new JsonSerializer();
         return ser.Deserialize<IceHill[]>(jsonReader);
     }
+    
+    public string FileName => $"temp{_userTelegramId}.json";
 }

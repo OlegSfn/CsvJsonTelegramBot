@@ -23,25 +23,31 @@ public class EditingFileStateHandler : IAsyncHandler
     {
         _logger.LogInformation($"{message.From.Id} entered file editing state.");
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
-        if (message.Text == "Filter")
+        if (message.Text == "Отфильтровать")
         {
             _logger.LogInformation($"{message.From.Id} [file editing state] entering choosing filter state.");
             await botClient.SendTextMessageAsync(message.Chat.Id,"Выберите поле для выборки: ", replyMarkup: Keyboards.GetInstance().FilterFieldKeyboard);
             userInfo.UserState = UserState.ChoosingFilter;
         }
-        else if (message.Text == "Sort")
+        else if (message.Text == "Отсортировать")
         {
             _logger.LogInformation($"{message.From.Id} [file editing state] entering choosing sorting state.");
             await botClient.SendTextMessageAsync(message.Chat.Id,"Выберите поле для сортировки: ", replyMarkup: Keyboards.GetInstance().SortFieldKeyboard);
             userInfo.UserState = UserState.ChoosingSortMode;
         }
-        else if (message.Text == "Delete")
+        else if (message.Text == "Удалить")
         {
             _logger.LogInformation($"{message.From.Id} [file editing state] deleting chosen file.");
             userInfo.FileNames.Remove(userInfo.CurFileNameDB);
             System.IO.File.Delete(userInfo.CurFileNameDB);
             await botClient.SendTextMessageAsync(message.Chat.Id,"Файл успешно удалён.", replyMarkup: Keyboards.GetInstance().SortFieldKeyboard);
             await _mainMenu.EnterMainMenuAsync(botClient, message);
+        }
+        else if (message.Text == "Скачать")
+        {
+            _logger.LogInformation($"{message.From.Id} [file editing state] entering downloading state.");
+            await botClient.SendTextMessageAsync(message.Chat.Id,"В каком расширении скачать файл:", replyMarkup: Keyboards.GetInstance().DownloadModeKeyboard);
+            userInfo.UserState = UserState.DownloadingFile;
         }
         else
         {

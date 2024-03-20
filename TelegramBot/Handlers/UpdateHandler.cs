@@ -5,7 +5,6 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Data;
 using TelegramBot.Data.User;
-using TelegramBot.Handlers.Commands;
 using TelegramBot.Handlers.FileEditing;
 using TelegramBot.Handlers.FileIO;
 
@@ -24,10 +23,11 @@ public class UpdateHandler
         _logger = logger;
 
         var mainMenu = new MainMenu(botStorage, logger);
+        var helpHandler = new HelpHandler(logger, mainMenu);
         _stateHandlers = new Dictionary<UserState, IAsyncHandler>
         {
             { UserState.None, new NoneStateHandler(botStorage, logger)},
-            { UserState.Menu, new MenuStateHandler(botStorage, logger)},
+            { UserState.Menu, new MenuStateHandler(botStorage, logger, helpHandler)},
             { UserState.EnteringNewFile, new NewFileStateHandler(botStorage, logger, mainMenu)},
             { UserState.EditingFile, new EditingFileStateHandler(botStorage, logger, mainMenu)},
             { UserState.ChoosingFile, new ChoosingFileStateHandler(botStorage, logger)},
@@ -40,7 +40,8 @@ public class UpdateHandler
         };
         _commandsHandlers = new Dictionary<string, IAsyncHandler>
         {
-            { "/start", new StartCommandHandler(botStorage, logger, mainMenu)}
+            { "/start", new RegisterUserHandler(botStorage, logger, mainMenu)},
+            { "/help", helpHandler}
         };
     }
     
@@ -49,7 +50,7 @@ public class UpdateHandler
         if (update.Type != UpdateType.Message || update.Message?.From == null)
             return;
         
-        _logger.LogInformation($"{update.Message.From.Id} sent: {update.Message.Text ?? "(no text)"}.");
+        _logger.LogInformation($"{update.Message.From.Id} sent: \"{update.Message.Text ?? "(no text)"}\".");
 
         // Handle commands.
         if (_commandsHandlers.TryGetValue(update.Message.Text ?? "", out var handler))

@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Reflection.Metadata;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -35,7 +34,7 @@ public class CSVProcessing : IFileProcessor
             ShouldQuote = _ => true
         };
 
-        var filePath = Path.Combine("../../../../data", "temps", $"temp{_userTelegramId}.csv");
+        var filePath = Path.Combine("../../../../data", "temps", FileName);
         using (var writer = new StreamWriter(filePath))
         using (var csv = new CsvWriter(writer, config))
         {
@@ -77,6 +76,6 @@ public class CSVProcessing : IFileProcessor
             
         return csv.GetRecords<IceHill>().ToArray();
     }
-    
-    
+
+    public string FileName => $"temp{_userTelegramId}.csv";
 }

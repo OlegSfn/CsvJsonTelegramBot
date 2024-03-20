@@ -39,7 +39,7 @@ public class Program
             cancellationToken: cts.Token
         );
         
-        Console.ReadLine(); // Needed to not end the program immediately.
+        Thread.Sleep(-1);
         cts.Cancel();
         return Task.CompletedTask;
     }

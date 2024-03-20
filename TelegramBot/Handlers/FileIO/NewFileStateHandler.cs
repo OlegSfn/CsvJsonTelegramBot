@@ -42,7 +42,7 @@ public class NewFileStateHandler : IAsyncHandler
         }
         
         
-        var destinationFilePath = PathExtensions.UserToDBFileName(document.FileName, message.From.Id.ToString());
+        var destinationFilePath = document.FileName.UserToDBFileName(message.From.Id.ToString());
         await using (Stream fileStream = File.Create(destinationFilePath))
         {
             await botClient.GetInfoAndDownloadFileAsync(

@@ -32,15 +32,8 @@ public class ChoosingFileStateHandler : IAsyncHandler
             return;
         }
 
-        if (!message.Text.EndsWith(".csv") && !message.Text.EndsWith(".json"))
-        {
-            _logger.LogInformation($"{message.From.Id} [file choosing state] wrong file extension.");
-            await botClient.SendTextMessageAsync(message.Chat.Id, "Название файла должно заканчиваться на \".csv\" или \".json\".");
-            return;
-        }
-
         var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), message.Text).CreateFileProcessor();    
-        userInfo.CurFileNameDB = PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString());
+        userInfo.CurFileNameDB = message.Text.UserToDBFileName(message.From.Id.ToString());
         try
         {
             await using Stream stream = System.IO.File.OpenRead(userInfo.CurFileNameDB);

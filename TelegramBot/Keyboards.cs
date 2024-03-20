@@ -15,7 +15,8 @@ public class Keyboards
         if (userInfo.FileNames.Count > 0)
             return new ReplyKeyboardMarkup(new[]
                 { 
-                    new KeyboardButton[] { "Enter new file", "Edit file", "Download file" }
+                    new KeyboardButton[] { "Добавить файл", "Выбрать файл"},
+                    new KeyboardButton[] { "Помощь"}
                 }) 
             {
                 ResizeKeyboard = true
@@ -23,7 +24,8 @@ public class Keyboards
         
         return new ReplyKeyboardMarkup(new[]
         { 
-            new KeyboardButton[] { "Enter new file"}
+            new KeyboardButton[] { "Добавить файл"},
+            new KeyboardButton[] { "Помощь"}
         }) 
         {
             ResizeKeyboard = true
@@ -32,8 +34,16 @@ public class Keyboards
 
     public ReplyKeyboardMarkup FileEditModeKeyboard => new (new[]
     {
-        new KeyboardButton[] {"Filter", "Sort"},
-        new KeyboardButton[] {"Delete"}
+        new KeyboardButton[] {"Отфильтровать", "Отсортировать"},
+        new KeyboardButton[] {"Удалить", "Скачать"}
+    })
+    {
+        ResizeKeyboard = true
+    };
+    
+    public ReplyKeyboardMarkup DownloadModeKeyboard => new (new[]
+    {
+        new KeyboardButton[] {"Csv", "Json"},
     })
     {
         ResizeKeyboard = true
@@ -80,18 +90,18 @@ public class Keyboards
     
     public ReplyKeyboardMarkup SortModeKeyboard => new (new[]
     {
-        new KeyboardButton[] {"Ascending", "Descending"}
+        new KeyboardButton[] {"По возрастанию", "По убыванию"}
     })
     {
         ResizeKeyboard = true
     };
     
-    public ReplyKeyboardMarkup GetFileNamesKeyboard(UserInfo userInfo, string userID)
+    public ReplyKeyboardMarkup GetFileNamesKeyboard(UserInfo userInfo, string userId)
     {
         var fileNamesButtons = new List<IEnumerable<KeyboardButton>>();
         for (int i = 0; i < userInfo.FileNames.Count/4; i++)
-            fileNamesButtons.Add(userInfo.FileNames.Skip(4 * i).Take(4).Select(x => new KeyboardButton(PathExtensions.DBToUserFileName(x, userID))));
-        fileNamesButtons.Add(userInfo.FileNames.TakeLast(userInfo.FileNames.Count%4).Select(x => new KeyboardButton(PathExtensions.DBToUserFileName(x, userID))));
+            fileNamesButtons.Add(userInfo.FileNames.Skip(4 * i).Take(4).Select(x => new KeyboardButton(x.DBToUserFileName(userId))));
+        fileNamesButtons.Add(userInfo.FileNames.TakeLast(userInfo.FileNames.Count%4).Select(x => new KeyboardButton(x.DBToUserFileName(userId))));
 
         
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(fileNamesButtons)

@@ -4,15 +4,15 @@ using Telegram.Bot.Types;
 using TelegramBot.Data;
 using TelegramBot.Data.User;
 
-namespace TelegramBot.Handlers.Commands;
+namespace TelegramBot.Handlers;
 
-public class StartCommandHandler : IAsyncHandler
+public class RegisterUserHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
     private readonly ILogger _logger;
     private readonly MainMenu _mainMenu;
     
-    public StartCommandHandler(BotStorage botStorage, ILogger logger, MainMenu mainMenu)
+    public RegisterUserHandler(BotStorage botStorage, ILogger logger, MainMenu mainMenu)
     {
         _botStorage = botStorage;
         _logger = logger;

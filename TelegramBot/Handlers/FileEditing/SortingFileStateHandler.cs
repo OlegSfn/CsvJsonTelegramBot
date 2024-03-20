@@ -33,9 +33,9 @@ public class SortingFileStateHandler : IAsyncHandler
             return;
         }
         
-        if (message.Text == "Ascending")
+        if (message.Text == "По возрастанию")
             userInfo.CurIceHills = sortedCollection.ToArray();
-        else if (message.Text == "Descending")
+        else if (message.Text == "По убыванию")
             userInfo.CurIceHills = sortedCollection.Reverse().ToArray();
         else
         {

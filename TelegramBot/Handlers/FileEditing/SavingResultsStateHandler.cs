@@ -34,7 +34,7 @@ public class SavingResultsStateHandler : IAsyncHandler
         var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),message.Text).CreateFileProcessor();
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         using var sr = new StreamReader(fileProcessor.Write(userInfo.CurIceHills));
-        await System.IO.File.WriteAllTextAsync(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()), await sr.ReadToEndAsync());
+        await System.IO.File.WriteAllTextAsync(message.Text.UserToDBFileName(message.From.Id.ToString()), await sr.ReadToEndAsync());
         _logger.LogInformation($"{message.From.Id} [saving results state] result was saved successfully.");
         
         await botClient.SendTextMessageAsync(message.Chat.Id,"Результат сохранён!");

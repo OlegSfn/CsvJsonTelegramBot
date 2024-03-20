@@ -2,7 +2,7 @@ namespace IceHillProcessor;
 
 public class FileProcessorFactory
 {
-    private string _userTelegramId;
+    private readonly string _userTelegramId;
     private string _fileName;
     
     public FileProcessorFactory(string userTelegramId, string fileName)
