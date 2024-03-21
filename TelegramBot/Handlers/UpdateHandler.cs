@@ -64,25 +64,35 @@ public class UpdateHandler
             return;
         
         _logger.LogInformation($"{update.Message.From.Id} sent: \"{update.Message.Text ?? "(no text)"}\".");
-        
-        // Register user if he is not registered.
-        if (!_botStorage.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
+
+        try
         {
-            await _registerUserHandler.HandleAsync(botClient, update.Message);
-            user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
+            // Register user if he is not registered.
+            if (!_botStorage.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
+            {
+                await _registerUserHandler.HandleAsync(botClient, update.Message);
+                user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
+            }
+
+            // Handle commands.
+            if (_commandsHandlers.TryGetValue(update.Message.Text ?? "", out var handler))
+            {
+                await handler.HandleAsync(botClient, update.Message);
+                return;
+            }
+
+            // Handle messages.
+            if (_stateHandlers.TryGetValue(user.UserState, out handler))
+                await handler.HandleAsync(botClient, update.Message);
+            else
+                _logger.LogInformation($"{update.Message.From.Id} unhandled state - {user.UserState}");
         }
-        
-        // Handle commands.
-        if (_commandsHandlers.TryGetValue(update.Message.Text ?? "", out var handler))
+        catch (Exception e)
         {
-            await handler.HandleAsync(botClient, update.Message);
-            return;
+            await botClient.SendTextMessageAsync(update.Message.From.Id,
+                "Упс, кажется, вы обидели бота :(\nНажмите /start, чтобы продолжить работу.", 
+                cancellationToken: cancellationToken);
+            _logger.LogCritical($"{update.Message.From.Id} crashed bot with: {e.Message}");
         }
-        
-        // Handle messages.
-        if (_stateHandlers.TryGetValue(user.UserState, out handler))
-            await handler.HandleAsync(botClient, update.Message);
-        else
-            _logger.LogInformation($"{update.Message.From.Id} unhandled state - {user.UserState}");
     }
 }

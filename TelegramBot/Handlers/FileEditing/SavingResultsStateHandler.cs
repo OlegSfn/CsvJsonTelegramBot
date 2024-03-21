@@ -35,13 +35,23 @@ public class SavingResultsStateHandler : IAsyncHandler
         _logger.LogInformation($"{message.From.Id} entered saving results state.");
         var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),".csv").CreateFileProcessor();
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
-        using var sr = new StreamReader(fileProcessor.Write(userInfo.CurIceHills));
-        await System.IO.File.WriteAllTextAsync(message.Text.UserToDBFileName(message.From.Id.ToString()), await sr.ReadToEndAsync());
-        _logger.LogInformation($"{message.From.Id} [saving results state] result was saved successfully.");
-        
-        await botClient.SendTextMessageAsync(message.Chat.Id,"Результат сохранён!");
-        userInfo.FileNames.Add(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()));
-        
-        await _transitionToMenuHandler.HandleAsync(botClient, message);
+
+        try
+        {
+            using var sr = new StreamReader(fileProcessor.Write(userInfo.CurIceHills));
+            await System.IO.File.WriteAllTextAsync(message.Text.UserToDBFileName(message.From.Id.ToString()),
+                await sr.ReadToEndAsync());
+            _logger.LogInformation($"{message.From.Id} [saving results state] result was saved successfully.");
+            await botClient.SendTextMessageAsync(message.Chat.Id, "Результат сохранён!");
+            userInfo.FileNames.Add(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()));
+
+            await _transitionToMenuHandler.HandleAsync(botClient, message);
+        }
+        catch (IOException)
+        {
+            _logger.LogInformation($"{message.From.Id} [saving results state] result was not saved.");
+            await botClient.SendTextMessageAsync(message.Chat.Id, "Недопустимое имя файла!");
+        }
+
     }
 }
