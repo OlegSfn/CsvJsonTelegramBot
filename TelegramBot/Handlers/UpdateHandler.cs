@@ -92,6 +92,8 @@ public class UpdateHandler
             await botClient.SendTextMessageAsync(update.Message.From.Id,
                 "Упс, кажется, вы обидели бота :(\nНажмите /start, чтобы продолжить работу.", 
                 cancellationToken: cancellationToken);
+
+            _botStorage.IdToUserInfoDict.Remove(update.Message.From.Id);
             _logger.LogCritical($"{update.Message.From.Id} crashed bot with: {e.Message}");
         }
     }

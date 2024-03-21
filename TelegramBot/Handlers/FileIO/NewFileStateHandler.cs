@@ -71,6 +71,12 @@ public class NewFileStateHandler : IAsyncHandler
                 iceHills = fileProcessor.Read(stream); 
             }
             File.Delete(destinationFilePath);
+            if (iceHills.Length == 0)
+            {
+                await botClient.SendTextMessageAsync(message.From.Id, "В файле нет данных о горках.\nОтправьте корректный файл или напишите /examples, чтобы посмотреть примеры файлов.");
+                return;
+            }
+            
             fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), ".csv").CreateFileProcessor();
             using (var sr = new StreamReader(fileProcessor.Write(iceHills)))
                 await using (var sw = new StreamWriter(Path.ChangeExtension(destinationFilePath, ".csv")))
