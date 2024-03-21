@@ -52,6 +52,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="$USER_HOME$/Downloads/фывыф.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Downloads/ывфюсы.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/data/examples/example.csv">
           <value>
             <Attribute>

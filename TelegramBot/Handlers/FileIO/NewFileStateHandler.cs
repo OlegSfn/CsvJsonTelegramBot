@@ -81,9 +81,9 @@ public class NewFileStateHandler : IAsyncHandler
             userInfo.FileNames.Add(Path.ChangeExtension(destinationFilePath, ".csv"));
             await _transitionToMenuHandler.HandleAsync(botClient, message);
         }
-        catch (Exception e) when (e is BadDataException or ArgumentException or JsonSerializationException or ReaderException or TypeConverterException)
+        catch (Exception e) when (e is BadDataException or ArgumentException or JsonSerializationException or JsonReaderException or ReaderException or TypeConverterException)
         {
-            await botClient.SendTextMessageAsync(message.Chat.Id, "Файл некорректный.");
+            await botClient.SendTextMessageAsync(message.Chat.Id, "Файл некорректный.\nОтправьте корректный файл или напишите /examples, чтобы посмотреть примеры файлов.");
             _logger.LogInformation($"{message.From.Id} [file upload state] sent file with wrong data.");
             File.Delete(destinationFilePath);
         }

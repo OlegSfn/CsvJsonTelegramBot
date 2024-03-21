@@ -28,15 +28,19 @@ public class HelpHandler : IAsyncHandler
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"Sent help to {message.From.Id}.");
-        var helpText = "Этот бот предназначен для обработки файлов в форматах CSV и JSON, содержащих информацию о зимних спортивных объектах. Он может фильтровать данные по следующим параметрам:\n\n" +
-                           "1) NameWinter: Название спортивной зоны в зимний период.\n" +
-                           "2) HasEquipmentRental: Наличие возможности проката оборудования.\n" + 
-                           "3) AdmArea: Административный округ, в котором расположен спортивный объект.\n" +
-                           "4) HasWifi: Наличие точки Wi-Fi.\n" +
-                           "5) ServicesWinter: Услуги, предоставляемые в зимний период.\n\n" +
-                       "Также бот может сортировать данные по следующим параметрам:\n" + 
-                           "1) ServicesWinter: Услуги, предоставляемые в зимний период.\n" +
-                           "2) UsagePeriodWinter: Период эксплуатации в зимний период.\n";
+        const string helpText = "Этот бот предназначен для обработки файлов в форматах CSV и JSON, содержащих информацию о зимних спортивных объектах. Он может фильтровать данные по следующим параметрам:\n\n" +
+                                "1) NameWinter: Название спортивной зоны в зимний период.\n" +
+                                "2) HasEquipmentRental: Наличие возможности проката оборудования.\n" + 
+                                "3) AdmArea: Административный округ, в котором расположен спортивный объект.\n" +
+                                "4) HasWifi: Наличие точки Wi-Fi.\n" +
+                                "5) ServicesWinter: Услуги, предоставляемые в зимний период.\n\n" +
+                                "Также бот может сортировать данные по следующим параметрам:\n" + 
+                                "1) ServicesWinter: Услуги, предоставляемые в зимний период.\n" +
+                                "2) UsagePeriodWinter: Период эксплуатации в зимний период.\n\n" +
+                                "Бот поддерживает следующие команды:\n" +
+                                "1) /start - Переход в меню, запуск бота.\n" +
+                                "2) /help - Получить помощь.\n" +
+                                "3) /examples - Получить примеры файлов.";
         
         await botClient.SendTextMessageAsync(message.From.Id, helpText);
         await _transitionToMenuHandler.HandleAsync(botClient, message);
