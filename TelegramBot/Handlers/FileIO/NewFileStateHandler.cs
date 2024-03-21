@@ -81,7 +81,8 @@ public class NewFileStateHandler : IAsyncHandler
             using (var sr = new StreamReader(fileProcessor.Write(iceHills)))
                 await using (var sw = new StreamWriter(Path.ChangeExtension(destinationFilePath, ".csv")))
                     await sw.WriteAsync(await sr.ReadToEndAsync());
-            
+
+            fileProcessor.Read(File.OpenRead(Path.ChangeExtension(destinationFilePath, ".csv")));
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл успешно добавлен.");
             _logger.LogInformation($"{message.From.Id} [file upload state] file was saved successfully.");
             userInfo.FileNames.Add(Path.ChangeExtension(destinationFilePath, ".csv"));

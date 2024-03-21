@@ -45,7 +45,15 @@ public class JSONProcessing : IFileProcessor
         using var reader = new StreamReader(stream);
         using var jsonReader = new JsonTextReader(reader);
         var ser = new JsonSerializer();
-        return ser.Deserialize<IceHill[]>(jsonReader);
+        try
+        {
+            return ser.Deserialize<IceHill[]>(jsonReader);
+        }
+        catch (Exception)
+        {
+            return new []{ser.Deserialize<IceHill>(jsonReader)};
+        }
+        
     }
     
     /// <summary>
