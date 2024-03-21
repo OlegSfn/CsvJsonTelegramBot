@@ -61,7 +61,14 @@ public class UpdateHandler
             return;
         
         _logger.LogInformation($"{update.Message.From.Id} sent: \"{update.Message.Text ?? "(no text)"}\".");
-
+        
+        // Register user if he is not registered.
+        if (!_botStorage.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
+        {
+            await _commandsHandlers["/start"].HandleAsync(botClient, update.Message);
+            user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
+        }
+        
         // Handle commands.
         if (_commandsHandlers.TryGetValue(update.Message.Text ?? "", out var handler))
         {
@@ -70,12 +77,6 @@ public class UpdateHandler
         }
         
         // Handle messages.
-        if (!_botStorage.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
-        {
-            await _commandsHandlers["/start"].HandleAsync(botClient, update.Message);
-            user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
-        }
-        
         if (_stateHandlers.TryGetValue(user.UserState, out handler))
             await handler.HandleAsync(botClient, update.Message);
         else
