@@ -10,13 +10,15 @@ namespace TelegramBot.Handlers;
 public class HelpHandler : IAsyncHandler
 {
     private readonly ILogger _logger;
-    private readonly MainMenu _mainMenu;
+    private readonly TransitionToMenuHandler _transitionToMenuHandler;
     
-    public HelpHandler(ILogger logger, MainMenu mainMenu)
+    public HelpHandler(ILogger logger, TransitionToMenuHandler transitionToMenuHandler)
     {
         _logger = logger;
-        _mainMenu = mainMenu;
+        _transitionToMenuHandler = transitionToMenuHandler;
     }
+    
+    public HelpHandler() { }
 
     /// <summary>
     /// Handles the help request by sending help information to the user.
@@ -37,6 +39,6 @@ public class HelpHandler : IAsyncHandler
                            "2) UsagePeriodWinter: Период эксплуатации в зимний период.\n";
         
         await botClient.SendTextMessageAsync(message.From.Id, helpText);
-        await _mainMenu.EnterMainMenuAsync(botClient, message);
+        await _transitionToMenuHandler.HandleAsync(botClient, message);
     }
 }

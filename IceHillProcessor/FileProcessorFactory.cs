@@ -14,6 +14,8 @@ public class FileProcessorFactory
         _fileName = fileName;
     }
 
+    public FileProcessorFactory() { }
+
     /// <summary>
     /// Creates an instance of the appropriate file processor based on the file extension.
     /// </summary>

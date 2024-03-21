@@ -15,6 +15,8 @@ public class NoneStateHandler : IAsyncHandler
     {
         _logger = logger;
     }
+    
+    public NoneStateHandler() { }
 
     /// <summary>
     /// Handles incoming messages in the 'None' state.

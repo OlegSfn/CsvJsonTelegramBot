@@ -14,6 +14,8 @@ public class JSONProcessing : IFileProcessor
         _userTelegramId = userTelegramId;
     }
 
+    public JSONProcessing() { }
+
     /// <summary>
     /// Writes ice hills data to a JSON file.
     /// </summary>

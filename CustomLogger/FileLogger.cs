@@ -14,6 +14,8 @@ public class FileLogger : ILogger
         _filePath = path;
     }
     
+    public FileLogger() {}
+    
     /// <summary>
     /// This method does not provide any scope context.
     /// </summary>

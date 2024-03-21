@@ -21,6 +21,8 @@ public class ChoosingFilterStateHandler : IAsyncHandler
         _botStorage = botStorage;
         _logger = logger;
     }
+    
+    public ChoosingFilterStateHandler() { }
 
     /// <summary>
     /// Handles the choosing filter state by processing the user's message.
@@ -41,7 +43,7 @@ public class ChoosingFilterStateHandler : IAsyncHandler
         if (message.Text == "End")
         {
             _logger.LogInformation($"{message.From.Id} [choosing filter state] entering saving results state.");
-            await botClient.SendTextMessageAsync(message.Chat.Id, "Введите название файла с расширением, куда сохранить результат:", replyMarkup: new ReplyKeyboardRemove());
+            await botClient.SendTextMessageAsync(message.Chat.Id, "Введите название файла, куда сохранить результат:", replyMarkup: new ReplyKeyboardRemove());
             userInfo.UserState = UserState.SavingResults;
             return;
         }

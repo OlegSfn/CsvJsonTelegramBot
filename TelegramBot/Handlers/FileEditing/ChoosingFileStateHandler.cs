@@ -21,7 +21,9 @@ public class ChoosingFileStateHandler : IAsyncHandler
         _botStorage = botStorage;
         _logger = logger;
     }
-    
+
+    public ChoosingFileStateHandler() { }
+
     /// <summary>
     /// Handles the choosing file state by processing the user's message.
     /// </summary>
@@ -40,7 +42,7 @@ public class ChoosingFileStateHandler : IAsyncHandler
             return;
         }
 
-        var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), message.Text).CreateFileProcessor();    
+        var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), ".csv").CreateFileProcessor();    
         userInfo.CurFileNameDB = message.Text.UserToDBFileName(message.From.Id.ToString());
         try
         {

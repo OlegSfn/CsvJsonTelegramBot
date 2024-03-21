@@ -13,14 +13,16 @@ public class EditingFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
     private readonly ILogger _logger;
-    private readonly MainMenu _mainMenu;
+    private readonly TransitionToMenuHandler _transitionToMenuHandler;
 
-    public EditingFileStateHandler(BotStorage botStorage, ILogger logger, MainMenu mainMenu)
+    public EditingFileStateHandler(BotStorage botStorage, ILogger logger, TransitionToMenuHandler transitionToMenuHandler)
     {
         _botStorage = botStorage;
         _logger = logger;
-        _mainMenu = mainMenu;
+        _transitionToMenuHandler = transitionToMenuHandler;
     }
+    
+    public EditingFileStateHandler() { }
 
     /// <summary>
     /// Handles the editing file state by processing the user's message.
@@ -49,7 +51,7 @@ public class EditingFileStateHandler : IAsyncHandler
             userInfo.FileNames.Remove(userInfo.CurFileNameDB);
             System.IO.File.Delete(userInfo.CurFileNameDB);
             await botClient.SendTextMessageAsync(message.Chat.Id,"Файл успешно удалён.", replyMarkup: Keyboards.GetInstance().SortFieldKeyboard);
-            await _mainMenu.EnterMainMenuAsync(botClient, message);
+            await _transitionToMenuHandler.HandleAsync(botClient, message);
         }
         else if (message.Text == "Скачать")
         {

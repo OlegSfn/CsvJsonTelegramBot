@@ -13,6 +13,8 @@ public class FileLoggerProvider : ILoggerProvider
         _path = path;
     }
 
+    public FileLoggerProvider() { }
+
     /// <summary>
     /// Creates a new instance of the FileLogger class.
     /// </summary>

@@ -30,7 +30,9 @@ public class CSVProcessing : IFileProcessor
     {
         _userTelegramId = userTelegramId;
     }
-    
+
+    public CSVProcessing() { }
+
     /// <summary>
     /// Writes ice hills data to a CSV file.
     /// </summary>

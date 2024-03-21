@@ -10,13 +10,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="$USER_HOME$/Desktop/ice-hills.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value=";" />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="$USER_HOME$/Desktop/test.csv">
           <value>
             <Attribute>
@@ -39,20 +32,6 @@
           </value>
         </entry>
         <entry key="$USER_HOME$/Downloads/asdsa.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="$USER_HOME$/Downloads/data.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="$USER_HOME$/Downloads/ice-hills-big.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

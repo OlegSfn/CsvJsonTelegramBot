@@ -21,6 +21,8 @@ public class ChoosingSortModeStateHandler : IAsyncHandler
         _botStorage = botStorage;
         _logger = logger;
     }
+    
+    public ChoosingSortModeStateHandler() { }
 
     /// <summary>
     /// Handles the choosing sort mode state by processing the user's message.

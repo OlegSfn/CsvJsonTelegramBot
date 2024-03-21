@@ -20,6 +20,8 @@ public class FilteringFileStateHandler : IAsyncHandler
         _botStorage = botStorage;
         _logger = logger;
     }
+    
+    public FilteringFileStateHandler() { }
 
     /// <summary>
     /// Handles the filtering file state by processing the user's message.

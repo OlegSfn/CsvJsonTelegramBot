@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Data;
@@ -17,15 +16,13 @@ public class UpdateHandler
 {
     private readonly Dictionary<UserState, IAsyncHandler> _stateHandlers;
     private readonly Dictionary<string, IAsyncHandler> _commandsHandlers;
-    private BotStorage _botStorage;
-    private ILogger _logger;
+    private readonly RegisterUserHandler _registerUserHandler;
+    private readonly BotStorage _botStorage;
+    private readonly ILogger _logger;
 
     public UpdateHandler(BotStorage botStorage, ILogger logger)
     {
-        _botStorage = botStorage;
-        _logger = logger;
-
-        var mainMenu = new MainMenu(botStorage, logger);
+        var mainMenu = new TransitionToMenuHandler(botStorage, logger);
         var helpHandler = new HelpHandler(logger, mainMenu);
         _stateHandlers = new Dictionary<UserState, IAsyncHandler>
         {
@@ -43,11 +40,17 @@ public class UpdateHandler
         };
         _commandsHandlers = new Dictionary<string, IAsyncHandler>
         {
-            { "/start", new RegisterUserHandler(botStorage, logger, mainMenu) },
+            { "/start", mainMenu },
             { "/help", helpHandler },
             { "/examples", new AskExamplesHandler(logger, mainMenu) }
         };
+
+        _registerUserHandler = new RegisterUserHandler(botStorage, logger);
+        _botStorage = botStorage;
+        _logger = logger;
     }
+    
+    public UpdateHandler() { }
     
     /// <summary>
     /// Handles the incoming update from the Telegram bot.
@@ -65,7 +68,7 @@ public class UpdateHandler
         // Register user if he is not registered.
         if (!_botStorage.IdToUserInfoDict.TryGetValue(update.Message.From.Id, out var user))
         {
-            await _commandsHandlers["/start"].HandleAsync(botClient, update.Message);
+            await _registerUserHandler.HandleAsync(botClient, update.Message);
             user = _botStorage.IdToUserInfoDict[update.Message.From.Id];
         }
         
@@ -81,24 +84,5 @@ public class UpdateHandler
             await handler.HandleAsync(botClient, update.Message);
         else
             _logger.LogInformation($"{update.Message.From.Id} unhandled state - {user.UserState}");
-    }
-
-    /// <summary>
-    /// Handles polling errors from the Telegram bot.
-    /// </summary>
-    /// <param name="botClient">The Telegram bot client.</param>
-    /// <param name="exception">The exception that occurred during polling.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-    {
-        var errorMessage = exception switch
-        {
-            ApiRequestException apiRequestException
-                => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-            _ => exception.ToString()
-        };
-
-        _logger.LogError(errorMessage);
-        return Task.CompletedTask;
     }
 }

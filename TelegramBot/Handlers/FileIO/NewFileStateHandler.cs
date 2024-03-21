@@ -18,14 +18,16 @@ public class NewFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
     private readonly ILogger _logger;
-    private readonly MainMenu _mainMenu;
+    private readonly TransitionToMenuHandler _transitionToMenuHandler;
 
-    public NewFileStateHandler(BotStorage botStorage, ILogger logger, MainMenu mainMenu)
+    public NewFileStateHandler(BotStorage botStorage, ILogger logger, TransitionToMenuHandler transitionToMenuHandler)
     {
         _botStorage = botStorage;
         _logger = logger;
-        _mainMenu = mainMenu;
+        _transitionToMenuHandler = transitionToMenuHandler;
     }
+    
+    public NewFileStateHandler() { }
 
     /// <summary>
     /// Handles the new file upload state by processing the user's message.
@@ -62,21 +64,28 @@ public class NewFileStateHandler : IAsyncHandler
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         try
         {
-            var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),document.FileName).CreateFileProcessor();
-            await using Stream stream = File.OpenRead(destinationFilePath);
-            fileProcessor.Read(stream); // Check for bad data.
+            var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), document.FileName).CreateFileProcessor();
+            IceHill[] iceHills;
+            await using (Stream stream = File.OpenRead(destinationFilePath))
+            {
+                iceHills = fileProcessor.Read(stream); 
+            }
+            File.Delete(destinationFilePath);
+            fileProcessor = new FileProcessorFactory(message.From.Id.ToString(), ".csv").CreateFileProcessor();
+            using (var sr = new StreamReader(fileProcessor.Write(iceHills)))
+                await using (var sw = new StreamWriter(Path.ChangeExtension(destinationFilePath, ".csv")))
+                    await sw.WriteAsync(await sr.ReadToEndAsync());
+            
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл успешно добавлен.");
             _logger.LogInformation($"{message.From.Id} [file upload state] file was saved successfully.");
+            userInfo.FileNames.Add(Path.ChangeExtension(destinationFilePath, ".csv"));
+            await _transitionToMenuHandler.HandleAsync(botClient, message);
         }
         catch (Exception e) when (e is BadDataException or ArgumentException or JsonSerializationException or ReaderException or TypeConverterException)
         {
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл некорректный.");
             _logger.LogInformation($"{message.From.Id} [file upload state] sent file with wrong data.");
             File.Delete(destinationFilePath);
-            return;
         }
-        
-        userInfo.FileNames.Add(destinationFilePath);
-        await _mainMenu.EnterMainMenuAsync(botClient, message);
     }
 }

@@ -14,14 +14,16 @@ public class SavingResultsStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
     private readonly ILogger _logger;
-    private readonly MainMenu _mainMenu;
+    private readonly TransitionToMenuHandler _transitionToMenuHandler;
     
-    public SavingResultsStateHandler(BotStorage botStorage, ILogger logger, MainMenu mainMenu)
+    public SavingResultsStateHandler(BotStorage botStorage, ILogger logger, TransitionToMenuHandler transitionToMenuHandler)
     {
         _botStorage = botStorage;
         _logger = logger;
-        _mainMenu = mainMenu;
+        _transitionToMenuHandler = transitionToMenuHandler;
     }
+    
+    public SavingResultsStateHandler() { }
 
     /// <summary>
     /// Handles the saving results state by processing the user's message.
@@ -31,15 +33,7 @@ public class SavingResultsStateHandler : IAsyncHandler
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered saving results state.");
-        if (!message.Text.EndsWith(".csv") && !message.Text.EndsWith(".json"))
-        {
-            _logger.LogInformation($"{message.From.Id} [saving results state] bad file extension.");
-            await botClient.SendTextMessageAsync(message.From.Id,
-                "Название файла должно оканчиваться на \".csv\" или \".json\".");
-            return;
-        }
-
-        var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),message.Text).CreateFileProcessor();
+        var fileProcessor = new FileProcessorFactory(message.From.Id.ToString(),".csv").CreateFileProcessor();
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];
         using var sr = new StreamReader(fileProcessor.Write(userInfo.CurIceHills));
         await System.IO.File.WriteAllTextAsync(message.Text.UserToDBFileName(message.From.Id.ToString()), await sr.ReadToEndAsync());
@@ -48,6 +42,6 @@ public class SavingResultsStateHandler : IAsyncHandler
         await botClient.SendTextMessageAsync(message.Chat.Id,"Результат сохранён!");
         userInfo.FileNames.Add(PathExtensions.UserToDBFileName(message.Text, message.From.Id.ToString()));
         
-        await _mainMenu.EnterMainMenuAsync(botClient, message);
+        await _transitionToMenuHandler.HandleAsync(botClient, message);
     }
 }

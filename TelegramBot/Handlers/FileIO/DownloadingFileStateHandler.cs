@@ -14,14 +14,16 @@ public class DownloadingFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
     private readonly ILogger _logger;
-    private readonly MainMenu _mainMenu;
+    private readonly TransitionToMenuHandler _transitionToMenuHandler;
 
-    public DownloadingFileStateHandler(BotStorage botStorage, ILogger logger, MainMenu mainMenu)
+    public DownloadingFileStateHandler(BotStorage botStorage, ILogger logger, TransitionToMenuHandler transitionToMenuHandler)
     {
         _botStorage = botStorage;
         _logger = logger;
-        _mainMenu = mainMenu;
+        _transitionToMenuHandler = transitionToMenuHandler;
     }
+    
+    public DownloadingFileStateHandler() { }
 
     /// <summary>
     /// Handles the downloading file state by processing the user's message.
@@ -50,7 +52,7 @@ public class DownloadingFileStateHandler : IAsyncHandler
                 caption: "Ваш файл:");
 
             _logger.LogInformation($"{message.From.Id} [downloading state] successfully sent file.");
-            await _mainMenu.EnterMainMenuAsync(botClient, message);
+            await _transitionToMenuHandler.HandleAsync(botClient, message);
         }
         catch (FileNotFoundException)
         {

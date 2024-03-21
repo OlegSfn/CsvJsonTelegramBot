@@ -23,6 +23,8 @@ public class MenuStateHandler : IAsyncHandler
         _logger = logger;
         _helpHandler = helpHandler;
     }
+    
+    public MenuStateHandler() { }
 
     /// <summary>
     /// Handles incoming messages in the main menu state.

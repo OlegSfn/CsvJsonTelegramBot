@@ -20,6 +20,8 @@ public class SortingFileStateHandler : IAsyncHandler
         _botStorage = botStorage;
         _logger = logger;
     }
+    
+    public SortingFileStateHandler() { }
 
     /// <summary>
     /// Handles the sorting file state by processing the user's message.

@@ -3,18 +3,9 @@ using TelegramBot.Data.User;
 namespace TelegramBot.Data;
 
 /// <summary>
-/// Represents the storage for the bot's data.
+/// Represents the storage for the Telegram bot, mapping user IDs to user information.
 /// </summary>
 public class BotStorage
 {
-    private static BotStorage s_instance;
-    public Dictionary<long, UserInfo> IdToUserInfoDict = new();
-    
-    public static BotStorage GetInstance()
-    {
-        if (s_instance == null)
-            s_instance = new BotStorage();
-        
-        return s_instance;
-    } 
+    public Dictionary<long, UserInfo> IdToUserInfoDict { get; } = new();
 }
