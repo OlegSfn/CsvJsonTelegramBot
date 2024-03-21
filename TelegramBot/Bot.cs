@@ -51,5 +51,7 @@ public class Bot
             receiverOptions: _receiverOptions,
             cancellationToken: _cts.Token
         );
+        
+        _logger.LogInformation("Bot started.");
     }
 }
