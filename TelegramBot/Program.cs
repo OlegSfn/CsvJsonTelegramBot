@@ -22,7 +22,7 @@ public class Program
         loggerFactory.AddFile("../../../../var");
         var logger = loggerFactory.CreateLogger<Program>();
         
-        var botClient = new TelegramBotClient("1803799892:AAHr34l5WZnpJkovnE75C_kYMmDlrmOqMgc");
+        var botClient = new TelegramBotClient("7111138965:AAEIbvZ5b4Latoj1pzVUgBCLI2ThAJdDYZM");
 
         using CancellationTokenSource cts = new ();
         

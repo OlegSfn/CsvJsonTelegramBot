@@ -12,7 +12,7 @@ public static class PathExtensions
     /// <param name="userId">The user ID to append to the file name.</param>
     /// <returns>Returns the converted database file name.</returns>
     public static string UserToDBFileName(this string userFileName, string userId) 
-        => Path.Combine("../../../../", "data", Path.GetFileNameWithoutExtension(userFileName) + userId + Path.GetExtension(userFileName));
+        => Path.Combine("../../../../", "data", "user files", Path.GetFileNameWithoutExtension(userFileName) + userId + Path.GetExtension(userFileName));
 
     /// <summary>
     /// Converts a database file name to a user "friendly" file name based on the provided user ID.

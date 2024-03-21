@@ -29,22 +29,23 @@ public class UpdateHandler
         var helpHandler = new HelpHandler(logger, mainMenu);
         _stateHandlers = new Dictionary<UserState, IAsyncHandler>
         {
-            { UserState.None, new NoneStateHandler(logger)},
-            { UserState.Menu, new MenuStateHandler(botStorage, logger, helpHandler)},
-            { UserState.EnteringNewFile, new NewFileStateHandler(botStorage, logger, mainMenu)},
-            { UserState.EditingFile, new EditingFileStateHandler(botStorage, logger, mainMenu)},
-            { UserState.ChoosingFile, new ChoosingFileStateHandler(botStorage, logger)},
-            { UserState.FilteringFile, new FilteringFileStateHandler(botStorage, logger)},
-            { UserState.SortingFile, new SortingFileStateHandler(botStorage, logger)},
-            { UserState.DownloadingFile, new DownloadingFileStateHandler(botStorage, logger, mainMenu)},
-            { UserState.ChoosingFilter, new ChoosingFilterStateHandler(botStorage, logger)},
-            { UserState.ChoosingSortMode, new ChoosingSortModeStateHandler(botStorage, logger)},
-            { UserState.SavingResults, new SavingResultsStateHandler(botStorage, logger, mainMenu)}
+            { UserState.None, new NoneStateHandler(logger) },
+            { UserState.Menu, new MenuStateHandler(botStorage, logger, helpHandler) },
+            { UserState.EnteringNewFile, new NewFileStateHandler(botStorage, logger, mainMenu) },
+            { UserState.EditingFile, new EditingFileStateHandler(botStorage, logger, mainMenu) },
+            { UserState.ChoosingFile, new ChoosingFileStateHandler(botStorage, logger) },
+            { UserState.FilteringFile, new FilteringFileStateHandler(botStorage, logger) },
+            { UserState.SortingFile, new SortingFileStateHandler(botStorage, logger) },
+            { UserState.DownloadingFile, new DownloadingFileStateHandler(botStorage, logger, mainMenu) },
+            { UserState.ChoosingFilter, new ChoosingFilterStateHandler(botStorage, logger) },
+            { UserState.ChoosingSortMode, new ChoosingSortModeStateHandler(botStorage, logger) },
+            { UserState.SavingResults, new SavingResultsStateHandler(botStorage, logger, mainMenu) }
         };
         _commandsHandlers = new Dictionary<string, IAsyncHandler>
         {
-            { "/start", new RegisterUserHandler(botStorage, logger, mainMenu)},
-            { "/help", helpHandler}
+            { "/start", new RegisterUserHandler(botStorage, logger, mainMenu) },
+            { "/help", helpHandler },
+            { "/examples", new AskExamplesHandler(logger, mainMenu) }
         };
     }
     
