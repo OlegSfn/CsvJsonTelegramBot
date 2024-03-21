@@ -28,6 +28,8 @@ public class AskExamplesHandler : IAsyncHandler
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"Sent examples to {message.From.Id}.");
+
+        await botClient.SendTextMessageAsync(message.From.Id, "Примеры файлов:");
         await using (var stream = System.IO.File.OpenRead(Path.Combine("../../../../", "data", "examples", "example.csv")))
         {
             await botClient.SendDocumentAsync(
@@ -47,7 +49,5 @@ public class AskExamplesHandler : IAsyncHandler
                     fileName: "example.json"
                 ));
         }
-
-        await _transitionToMenuHandler.HandleAsync(botClient, message);
     }
 }
