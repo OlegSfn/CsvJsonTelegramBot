@@ -7,6 +7,9 @@ using TelegramBot.Data;
 
 namespace TelegramBot.Handlers.FileEditing;
 
+/// <summary>
+/// Represents a handler for processing the saving results state in the bot.
+/// </summary>
 public class SavingResultsStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -20,6 +23,11 @@ public class SavingResultsStateHandler : IAsyncHandler
         _mainMenu = mainMenu;
     }
 
+    /// <summary>
+    /// Handles the saving results state by processing the user's message.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered saving results state.");

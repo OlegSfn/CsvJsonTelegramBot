@@ -2,6 +2,9 @@ using IceHillProcessor;
 
 namespace TelegramBot.Data.User;
 
+/// <summary>
+/// Represents information about a user.
+/// </summary>
 public class UserInfo
 {
     public UserState UserState { get; set; }

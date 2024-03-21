@@ -6,6 +6,9 @@ using TelegramBot.Data.User;
 
 namespace TelegramBot.Handlers.FileEditing;
 
+/// <summary>
+/// Represents a handler for processing the editing file state in the bot.
+/// </summary>
 public class EditingFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -19,6 +22,11 @@ public class EditingFileStateHandler : IAsyncHandler
         _mainMenu = mainMenu;
     }
 
+    /// <summary>
+    /// Handles the editing file state by processing the user's message.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered file editing state.");

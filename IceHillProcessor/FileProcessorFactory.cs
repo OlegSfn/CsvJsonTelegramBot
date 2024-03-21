@@ -1,5 +1,8 @@
 namespace IceHillProcessor;
 
+/// <summary>
+/// Represents a factory for creating file processors based on file extensions.
+/// </summary>
 public class FileProcessorFactory
 {
     private readonly string _userTelegramId;
@@ -11,6 +14,10 @@ public class FileProcessorFactory
         _fileName = fileName;
     }
 
+    /// <summary>
+    /// Creates an instance of the appropriate file processor based on the file extension.
+    /// </summary>
+    /// <returns>Returns an instance of <see cref="IFileProcessor"/> corresponding to the file extension.</returns>
     public IFileProcessor CreateFileProcessor()
     {
         if (_fileName.EndsWith(".csv"))

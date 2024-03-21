@@ -3,6 +3,9 @@ using CsvHelper.Configuration.Attributes;
 
 namespace IceHillProcessor;
 
+/// <summary>
+/// Represents an ice hill entity.
+/// </summary>
 public class IceHill
 {
     #region Fields
@@ -273,6 +276,12 @@ public class IceHill
     }
     #endregion
 
+    
+    /// <summary>
+    /// Gets or sets specific properties of the IceHill class based on the provided field.
+    /// </summary>
+    /// <param name="field">The field to retrieve or set.</param>
+    /// <returns>The value associated with the specified field.</returns>
     [Ignore]
     public string this[string field]
     => field switch
@@ -286,6 +295,9 @@ public class IceHill
             _ => throw new ArgumentException("There is no such field or this field isn't supported yet.")
         };
 
+    /// <summary>
+    /// Gets the opening date of the ice hill based on its usage period in winter.
+    /// </summary>
     [Ignore]
     public DateTime OpenDate
     {
@@ -296,6 +308,4 @@ public class IceHill
             return new DateTime(DateTime.Now.Year, date.month, date.day);
         }
     } 
-        
-    
 }

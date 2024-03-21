@@ -8,6 +8,9 @@ using TelegramBot.Data.User;
 
 namespace TelegramBot.Handlers;
 
+/// <summary>
+/// Represents a handler for the main menu state in the Telegram bot.
+/// </summary>
 public class MenuStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -21,6 +24,11 @@ public class MenuStateHandler : IAsyncHandler
         _helpHandler = helpHandler;
     }
 
+    /// <summary>
+    /// Handles incoming messages in the main menu state.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message) 
     {
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];

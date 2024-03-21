@@ -7,6 +7,9 @@ using Extensions;
 
 namespace TelegramBot.Handlers.FileIO;
 
+/// <summary>
+/// Represents a handler for processing the downloading file state in the bot.
+/// </summary>
 public class DownloadingFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -20,6 +23,11 @@ public class DownloadingFileStateHandler : IAsyncHandler
         _mainMenu = mainMenu;
     }
 
+    /// <summary>
+    /// Handles the downloading file state by processing the user's message.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered downloading state.");

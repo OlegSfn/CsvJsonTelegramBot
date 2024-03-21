@@ -1,8 +1,10 @@
-using Microsoft.Extensions.Logging;
 using TelegramBot.Data.User;
 
 namespace TelegramBot.Data;
 
+/// <summary>
+/// Represents the storage for the bot's data.
+/// </summary>
 public class BotStorage
 {
     private static BotStorage s_instance;

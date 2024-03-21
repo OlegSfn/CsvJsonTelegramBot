@@ -1,5 +1,8 @@
 namespace TelegramBot.Data.User;
 
+/// <summary>
+/// Represents the state of a user in the bot.
+/// </summary>
 public enum UserState
 {
     None,

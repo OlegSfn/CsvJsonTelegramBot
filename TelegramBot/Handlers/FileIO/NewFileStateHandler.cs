@@ -3,6 +3,7 @@ using CsvHelper.TypeConversion;
 using Extensions;
 using IceHillProcessor;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Data;
@@ -10,6 +11,9 @@ using File = System.IO.File;
 
 namespace TelegramBot.Handlers.FileIO;
 
+/// <summary>
+/// Represents a handler for processing the new file upload state in the bot.
+/// </summary>
 public class NewFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -23,6 +27,11 @@ public class NewFileStateHandler : IAsyncHandler
         _mainMenu = mainMenu;
     }
 
+    /// <summary>
+    /// Handles the new file upload state by processing the user's message.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered file upload state.");
@@ -59,7 +68,7 @@ public class NewFileStateHandler : IAsyncHandler
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл успешно добавлен.");
             _logger.LogInformation($"{message.From.Id} [file upload state] file was saved successfully.");
         }
-        catch (Exception e) when (e is BadDataException or ArgumentException or ReaderException or TypeConverterException)
+        catch (Exception e) when (e is BadDataException or ArgumentException or JsonSerializationException or ReaderException or TypeConverterException)
         {
             await botClient.SendTextMessageAsync(message.Chat.Id, "Файл некорректный.");
             _logger.LogInformation($"{message.From.Id} [file upload state] sent file with wrong data.");

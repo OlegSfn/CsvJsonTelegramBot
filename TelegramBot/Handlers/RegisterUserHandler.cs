@@ -6,6 +6,9 @@ using TelegramBot.Data.User;
 
 namespace TelegramBot.Handlers;
 
+/// <summary>
+/// Represents a handler for registering users in the Telegram bot.
+/// </summary>
 public class RegisterUserHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -19,6 +22,11 @@ public class RegisterUserHandler : IAsyncHandler
         _mainMenu = mainMenu;
     }
     
+    /// <summary>
+    /// Handles the registration of new users.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         if (_botStorage.IdToUserInfoDict.ContainsKey(message.From.Id))

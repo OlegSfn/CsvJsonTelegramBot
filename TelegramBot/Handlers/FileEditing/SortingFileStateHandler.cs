@@ -7,6 +7,9 @@ using TelegramBot.Data.User;
 
 namespace TelegramBot.Handlers.FileEditing;
 
+/// <summary>
+/// Represents a handler for processing the sorting file state in the bot.
+/// </summary>
 public class SortingFileStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -18,6 +21,11 @@ public class SortingFileStateHandler : IAsyncHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles the sorting file state by processing the user's message.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         var userInfo = _botStorage.IdToUserInfoDict[message.From.Id];

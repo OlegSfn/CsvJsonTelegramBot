@@ -1,15 +1,29 @@
 using Extensions;
-using IceHillProcessor;
 using Telegram.Bot.Types.ReplyMarkups;
-using TelegramBot.Data;
 using TelegramBot.Data.User;
 
 namespace TelegramBot;
 
+/// <summary>
+/// Provides methods to generate various reply keyboards for the Telegram bot.
+/// </summary>
 public class Keyboards
 {
     private static Keyboards s_instance;
 
+    public static Keyboards GetInstance()
+    {
+        if (s_instance == null)
+            s_instance = new Keyboards();
+        
+        return s_instance;
+    } 
+    
+    /// <summary>
+    /// Gets the main menu keyboard.
+    /// </summary>
+    /// <param name="userInfo">The user information.</param>
+    /// <returns>The main menu keyboard.</returns>
     public ReplyKeyboardMarkup GetMainMenuKeyboard(UserInfo userInfo)
     {
         if (userInfo.FileNames.Count > 0)
@@ -32,6 +46,9 @@ public class Keyboards
         };
     }
 
+    /// <summary>
+    /// Gets the file edit mode keyboard.
+    /// </summary>
     public ReplyKeyboardMarkup FileEditModeKeyboard => new (new[]
     {
         new KeyboardButton[] {"Отфильтровать", "Отсортировать"},
@@ -41,6 +58,9 @@ public class Keyboards
         ResizeKeyboard = true
     };
     
+    /// <summary>
+    /// Gets the download mode keyboard.
+    /// </summary>
     public ReplyKeyboardMarkup DownloadModeKeyboard => new (new[]
     {
         new KeyboardButton[] {"Csv", "Json"},
@@ -49,6 +69,9 @@ public class Keyboards
         ResizeKeyboard = true
     };
     
+    /// <summary>
+    /// Gets the filter field keyboard.
+    /// </summary>
     public ReplyKeyboardMarkup FilterFieldKeyboard => new (new[]
     {
         new KeyboardButton[] {"NameWinter", "HasEquipmentRental"},
@@ -59,6 +82,11 @@ public class Keyboards
         ResizeKeyboard = true
     };
     
+    /// <summary>
+    /// Gets the filter value keyboard.
+    /// </summary>
+    /// <param name="userInfo">The user information.</param>
+    /// <returns>The filter value keyboard.</returns>
     public ReplyKeyboardMarkup GetFilterValueKeyboard(UserInfo userInfo)
     {
         var uniqueFilterValues = new HashSet<string>();
@@ -79,6 +107,9 @@ public class Keyboards
         return replyKeyboardMarkup;
     }
     
+    /// <summary>
+    /// Gets the sort field keyboard.
+    /// </summary>
     public ReplyKeyboardMarkup SortFieldKeyboard => new (new[]
     {
         new KeyboardButton[] {"ServicesWinter", "UsagePeriodWinter"},
@@ -88,6 +119,9 @@ public class Keyboards
         ResizeKeyboard = true
     };
     
+    /// <summary>
+    /// Gets the sort mode keyboard.
+    /// </summary>
     public ReplyKeyboardMarkup SortModeKeyboard => new (new[]
     {
         new KeyboardButton[] {"По возрастанию", "По убыванию"}
@@ -96,6 +130,12 @@ public class Keyboards
         ResizeKeyboard = true
     };
     
+    /// <summary>
+    /// Gets the file names keyboard.
+    /// </summary>
+    /// <param name="userInfo">The user information.</param>
+    /// <param name="userId">The user ID.</param>
+    /// <returns>The file names keyboard.</returns>
     public ReplyKeyboardMarkup GetFileNamesKeyboard(UserInfo userInfo, string userId)
     {
         var fileNamesButtons = new List<IEnumerable<KeyboardButton>>();
@@ -111,15 +151,5 @@ public class Keyboards
 
         return replyKeyboardMarkup;
     }
-    
-    
-    
-    public static Keyboards GetInstance()
-    {
-        if (s_instance == null)
-            s_instance = new Keyboards();
-        
-        return s_instance;
-    } 
 }
 

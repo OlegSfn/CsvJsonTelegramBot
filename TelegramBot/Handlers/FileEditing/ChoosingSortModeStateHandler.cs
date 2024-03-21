@@ -8,6 +8,9 @@ using TelegramBot.Data.User;
 
 namespace TelegramBot.Handlers.FileEditing;
 
+/// <summary>
+/// Represents a handler for processing the choosing sort mode state in the bot.
+/// </summary>
 public class ChoosingSortModeStateHandler : IAsyncHandler
 {
     private readonly BotStorage _botStorage;
@@ -19,6 +22,11 @@ public class ChoosingSortModeStateHandler : IAsyncHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles the choosing sort mode state by processing the user's message.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"{message.From.Id} entered choosing sort mode state.");

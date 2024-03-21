@@ -10,6 +10,9 @@ using TelegramBot.Handlers.FileIO;
 
 namespace TelegramBot.Handlers;
 
+/// <summary>
+/// Handles updates received from the Telegram bot.
+/// </summary>
 public class UpdateHandler
 {
     private readonly Dictionary<UserState, IAsyncHandler> _stateHandlers;
@@ -26,7 +29,7 @@ public class UpdateHandler
         var helpHandler = new HelpHandler(logger, mainMenu);
         _stateHandlers = new Dictionary<UserState, IAsyncHandler>
         {
-            { UserState.None, new NoneStateHandler(botStorage, logger)},
+            { UserState.None, new NoneStateHandler(logger)},
             { UserState.Menu, new MenuStateHandler(botStorage, logger, helpHandler)},
             { UserState.EnteringNewFile, new NewFileStateHandler(botStorage, logger, mainMenu)},
             { UserState.EditingFile, new EditingFileStateHandler(botStorage, logger, mainMenu)},
@@ -45,6 +48,12 @@ public class UpdateHandler
         };
     }
     
+    /// <summary>
+    /// Handles the incoming update from the Telegram bot.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="update">The update received from the Telegram bot.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         if (update.Type != UpdateType.Message || update.Message?.From == null)
@@ -72,6 +81,12 @@ public class UpdateHandler
             _logger.LogInformation($"{update.Message.From.Id} unhandled state - {user.UserState}");
     }
 
+    /// <summary>
+    /// Handles polling errors from the Telegram bot.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="exception">The exception that occurred during polling.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         var errorMessage = exception switch

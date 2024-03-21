@@ -4,6 +4,9 @@ using Telegram.Bot.Types;
 
 namespace TelegramBot.Handlers;
 
+/// <summary>
+/// Represents a handler for providing help information to users.
+/// </summary>
 public class HelpHandler : IAsyncHandler
 {
     private readonly ILogger _logger;
@@ -15,6 +18,11 @@ public class HelpHandler : IAsyncHandler
         _mainMenu = mainMenu;
     }
 
+    /// <summary>
+    /// Handles the help request by sending help information to the user.
+    /// </summary>
+    /// <param name="botClient">The Telegram bot client.</param>
+    /// <param name="message">The message sent by the user.</param>
     public async Task HandleAsync(ITelegramBotClient botClient, Message message)
     {
         _logger.LogInformation($"Sent help to {message.From.Id}.");
